@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script type="text/javascript" src="./lib/js/jquery.js"></script>
+  <script type="text/javascript" src="./lib/js/underscore.js"></script>
+  <script type="text/javascript" src="./lib/js/purl.js"></script>
+  <style type="text/css">
+    body {
+      font-family: Helvetica;
+    }
+    .hidden {
+      display: none;
+    }
+    /* menu items */
+    #menu {
+      top: 10px;
+      right: 10px;
+      background: #EEF;
+      padding: 10px;
+      border-radius: 3px;
+    }
+    #menu ul {
+      padding: 0;
+      list-style-type: none;
+    }
+    #menu ul li {
+      padding: 4px;
+      cursor: pointer;
+    }
+    #menu ul li:hover {
+      background: #FFF;
+    }
+    /* menu info */
+    #center {
+      width: 60%;
+      height: 400px;
+      margin: -200px auto 0 auto;
+      position: relative;
+      top: 50%;
+      cursor: default;
+      border-radius: 3px;
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+    #center > div {
+      padding: 10px;
+    }
+    #center .close {
+      padding: 2px;
+      float: right;
+      font-family: sans-serif;
+      cursor: pointer;
+    }
+    #help-text code {
+      background: #DDD;
+      padding: 0 2px;
+      margin: 1px;
+    }
+    /* make canvas full screen */
+    html, body {
+      width:  100%;
+      height: 100%;
+      margin: 0px;
+    }
+    /* z-indices */
+    .fixed {
+      position: fixed;
+    }
+    .absolute {
+      position: absolute;
+    }
+    canvas {
+      top: 0;
+    }
+    #canvas-back {
+      z-index: 0;
+    }
+    #canvas-draw {
+      z-index: 1;
+    }
+    #canvas-caret {
+      z-index: 2;
+    }
+    #menu {
+      z-index: 3;
+    }
+    #center {
+      z-index: 4;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu" class="fixed">
+    Menu
+    <ul class="hidden">
+      <li data-option="help">Help</li>
+      <li data-option="save">Save</li>
+      <li data-option="load">Load</li>
+    </ul>
+  </div>
+  <div id="center" class="hidden">
+    <div id="help-text" class="hidden">
+      <div class="close">x</div>
+      <h2>Help with point mover</h2>
+        TODO
+        <ol>
+          <li>what it aims to help with
+            <ul>
+              <li>quick start demo</li>
+            </ul>
+          </li>
+          <li>different strategies you can use</li>
+          <li>tips on how to get the most out of it</li>
+          <li>how to save and load files</li>
+        </ol>
+        <h3>Shortcuts</h3>
+        <ul>
+          <li><code>d</code> to display the current area of investigation and points recorded</li>
+          <li><code>-</code> to mark the current point as not visible</li>
+          <li><code>+</code> to mark the current point as visible</li>
+          <li><code>c</code> clear all the points you've recorded</li>
+          <li><code>s</code> (display the menu to) save the points you've recorded</li>
+        </ul>
+    </div>
+    <div id="save" class="hidden">
+      <div class="close">x</div>
+      <h2>Save</h2>
+
+    </div>
+    <div id="load" class="hidden">
+      <div class="close">x</div>
+      <h2>Load</h2>
+      <input id="files" type="file" name="files[]" />
+    </div>
+  </div>
+  <canvas id="canvas-back" class="absolute"></canvas>
+  <canvas id="canvas-draw" class="absolute"></canvas>
+  <canvas id="canvas-caret" class="absolute"></canvas>
+  <script type="text/javascript" src="./src/js/main.js"></script>
+</body>
+</html>
