@@ -35,16 +35,12 @@
       if (len == null) {
         len = 2;
       }
-      pad = ((function() {
-        var _i, _len, _ref, _results;
-        _ref = new Array(len);
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          i = _ref[_i];
-          _results.push('0');
-        }
-        return _results;
-      })()).join('');
+      i = 0;
+      pad = '';
+      while (i < len) {
+        i += 1;
+        pad += '0';
+      }
       return pad.substring(0, pad.length - str.length) + str;
     };
     getMousePos = function(canvas, evt) {
