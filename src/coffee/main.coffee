@@ -469,7 +469,7 @@ $(document).ready(->
   blinkCaretCanvas()
   parsed = purl(window.location)
   if parsed.param('hide-license')
-    hidePane.help()
+    hidePane.help({fadeOut: false})
 
   return
 )
