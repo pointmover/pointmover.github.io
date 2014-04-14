@@ -30,9 +30,21 @@
     error = function(msg) {
       return alert("Sorry there was an error " + msg + ", please refresh and try again.  If it persists,\ndrop an email to 'point dot mover at gmail dot com' and I'll do my best to respond and help.");
     };
-    lpad = function(str) {
-      var pad;
-      pad = '00000';
+    lpad = function(str, len) {
+      var i, pad;
+      if (len == null) {
+        len = 2;
+      }
+      pad = (function() {
+        var _i, _len, _ref, _results;
+        _ref = new Array(len);
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          i = _ref[_i];
+          _results.push('0');
+        }
+        return _results;
+      })();
       return pad.substring(0, pad.length - str.length) + str;
     };
     getMousePos = function(canvas, evt) {

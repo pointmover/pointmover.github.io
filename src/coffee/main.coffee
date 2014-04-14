@@ -12,8 +12,8 @@ $(document).ready(->
     alert """Sorry there was an error #{msg}, please refresh and try again.  If it persists,
     drop an email to 'point dot mover at gmail dot com' and I'll do my best to respond and help."""
 
-  lpad = (str) ->
-    pad = '00000'
+  lpad = (str, len=2) ->
+    pad = ('0' for i in new Array(len))
     return pad.substring(0, pad.length - str.length) + str
 
   getMousePos = (canvas, evt) ->
