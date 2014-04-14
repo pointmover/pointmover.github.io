@@ -466,7 +466,7 @@ $(document).ready(->
   newPoint(true)
   blinkCaretCanvas()
   parsed = purl(window.location)
-  if not parsed.param('hide-lisence')
+  if not parsed.param('hide-license')
     showPane.help()
 
   return

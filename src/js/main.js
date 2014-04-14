@@ -631,7 +631,7 @@
     newPoint(true);
     blinkCaretCanvas();
     parsed = purl(window.location);
-    if (!parsed.param('hide-lisence')) {
+    if (!parsed.param('hide-license')) {
       showPane.help();
     }
   });
