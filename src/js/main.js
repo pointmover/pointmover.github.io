@@ -488,9 +488,10 @@
     DIRECTION_IN = 1;
     direction = DIRECTION_OUT;
     newEdgeFinderPoint = function() {
-      var angle, center, lastBy1, point;
-      point = lastPoint();
-      if (point) {
+      var angle, center, last, lastBy1, point;
+      last = lastPoint();
+      if (last) {
+        point = _.clone(last);
         lastBy1 = lastPoint(2);
         if (point.seen) {
           if (direction === DIRECTION_OUT) {

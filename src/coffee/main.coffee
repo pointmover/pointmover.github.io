@@ -347,8 +347,9 @@ $(document).ready(->
     # * that this area is roughly circular
     # * that the center of the area of investigation
     #     is within the missing area of vision
-    point = lastPoint()
-    if point
+    last = lastPoint()
+    if last
+      point = _.clone(last)
       lastBy1 = lastPoint(2)
       if point.seen
         # move either radially if previously moving out
