@@ -12,6 +12,13 @@ $(document).ready(
     alert """Sorry there was an error #{msg}, please refresh and try again.  If it persists,
     drop an email to 'point dot mover at gmail dot com' and I'll do my best to respond and help."""
 
+  getMousePos = (canvas, evt) ->
+    rect = canvas.getBoundingClientRect()
+    position =
+      x: evt.clientX - rect.left
+      y: evt.clientY - rect.top
+    return position
+
   # Set up menu and menu items
   $menu = $('#menu')
   $menu.mouseenter ->
@@ -19,25 +26,62 @@ $(document).ready(
     $menu.find('ul').fadeIn()
   $menu.mouseleave ->
     $menu.animate({opacity: 0})
-  closeAllMenus = (fadeOut) ->
+  hideAllPanes = (fadeOut) ->
     if fadeOut
-      $('#center').fadeOut()
-      $('#center > div').fadeOut()
+      $('.pane-container').fadeOut()
+      $('.pane-container > div').fadeOut()
     else
-      $('#center > div').hide()
-      $('#center').hide()
+      $('.pane-container > div').hide()
+      $('.pane-container').hide()
 
-  _commonShowMenuTask = (elementId) ->
-    closeAllMenus()
-    $('#center').fadeIn()
-    $(elementId).fadeIn()
+  _commonShowPaneTask = (elementId) ->
+    _commonHidePaneTask()
+    for hidePaneFunction in _.values(hidePane)
+      hidePaneFunction()
+    $(elementId).fadeIn().parent().fadeIn()
 
-  showMenu =
+  showPane =
     help: ->
-      _commonShowMenuTask('#help-text')
+      _commonShowPaneTask('#help-text')
       dumpData()
+    area: ->
+      drawBlank({showInvestigationArea: false})
+      _commonShowPaneTask('#select-area')
+      $canvasCaret.hide()
+      startPosition = undefined
+      stopPosition = undefined
+      mousePosition = undefined
+      $canvasDraw.mousemove (evt) ->
+        if startPosition
+          if stopPosition
+            mousePosition2 = stopPosition
+          else
+            mousePosition2 = getMousePos(canvasDraw, evt)
+          clearCanvas(contextDraw)
+          contextDraw.strokeRect(
+            startPosition.x - 0.5, startPosition.y - 0.5,
+            mousePosition2.x - startPosition.x, mousePosition2.y - startPosition.y)
+      $canvasDraw.click (evt) ->
+        if not startPosition
+          startPosition = getMousePos(canvasDraw, evt)
+        else if not stopPosition
+          stopPosition = getMousePos(canvasDraw, evt)
+          center = getCenter()
+          x = startPosition.x - center.x
+          y = startPosition.y - center.y
+          w = stopPosition.x - startPosition.x
+          h = stopPosition.y - startPosition.y
+          link = "?aoi-x=#{x}&aoi-y=#{y}&aoi-w=#{w}&aoi-h=#{h}"
+          $('#area-link').removeClass('disabled').attr('href', link)
+        else
+          # reset
+          $('#area-link').addClass('disabled')
+          startPosition = getMousePos(canvasDraw, evt)
+          stopPosition = undefined
+        return
+
     save: ->
-      _commonShowMenuTask('#save')
+      _commonShowPaneTask('#save')
       data = dumpData()
       uriContent = "data:application/octet-stream," + encodeURIComponent(data);
       d = new Date()
@@ -45,13 +89,33 @@ $(document).ready(
       link = $('<a>').attr('href', uriContent).attr('download', filename).html("Click to save: #{filename}")
       $('#save').append(link)
     load: ->
-      _commonShowMenuTask('#load')
+      _commonShowPaneTask('#load')
 
-  $('#menu li').click (event) ->
-    option = $(event.target).data('option')
-    showMenu[option]()
-  $('#center .close').click (event) ->
-    closeAllMenus(true)
+  _commonHidePaneTask = ->
+    hideAllPanes(true)
+
+  hidePane =
+    help: ->
+    area: ->
+      $canvasCaret.show()
+    save: ->
+    load: ->
+
+  $('#menu li').click (evt) ->
+    option = $(evt.target).data('option')
+    showPane[option]()
+  $('.close').click (evt) ->
+    option = $(evt.target).data('option')
+    _commonHidePaneTask()
+    hidePane[option]()
+
+  $('#area-link').click (evt) ->
+    if $(evt.target).hasClass('disabled')
+      evt.preventDefault()
+      alert 'Area is not defined yet, please select an area by clicking once, and moving to a second point and clicking again.'
+      return
+    else
+      'allow click to load new page'
   $('#files').change ->
     fr = new FileReader()
     file =  $('#files')[0].files[0]
@@ -62,7 +126,7 @@ $(document).ready(
         window.PMState = JSON.parse(content)
         displayData()
         newPoint()
-        closeAllMenus(true)
+        hideAllPanes(true)
       catch e
         error('loading points from file')
         throw e
@@ -96,8 +160,14 @@ $(document).ready(
   resizeCanvas(contextCaret)
 
   blinkCaretCanvas = ->
+    window.allowBlink = true
+    _blinkCaretCanvas()
+
+  _blinkCaretCanvas = ->
+    if not window.allowBlink
+      return
     done = ->
-      $canvasCaret.animate({opacity: 1}, {duration: cursorBlink.off, done: blinkCaretCanvas})
+      $canvasCaret.animate({opacity: 1}, {duration: cursorBlink.off, done: _blinkCaretCanvas})
     $canvasCaret.animate({opacity: 0}, {duration: cursorBlink.on, done: done})
 
   width = canvasBack.width
@@ -180,16 +250,19 @@ $(document).ready(
       window.PMState.areaOfInvestigation.width,
       window.PMState.areaOfInvestigation.height,)
 
+  clearCanvas = (ctx) ->
+    ctx.clearRect(0, 0, width, height)
+
   drawBlank = (options={}) ->
     options.showInvestigationArea ?= true
 
     # clear all the canvases
     for ctx in [contextBack, contextDraw, contextCaret]
-      ctx.clearRect(0,0,width,height)
+      clearCanvas(ctx)
 
     # faint background
     contextBack.fillStyle = backgroundColour
-    contextBack.fillRect(0,0,width,height)
+    contextBack.fillRect(0, 0, width, height)
     # dot in center
     showPoint({x: 0, y: 0})
     if options.showInvestigationArea
@@ -368,7 +441,7 @@ $(document).ready(
       console.log 'r'
     else if evt.keyCode == 83
       console.log 's'
-      showMenu.save()
+      showPane.save()
     else if evt.keyCode == 187
       console.log 'plus'
       seen()

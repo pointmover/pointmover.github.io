@@ -12,6 +12,9 @@
     .hidden {
       display: none;
     }
+    a.disabled {
+      color: gray;
+    }
     /* menu items */
     #menu {
       top: 10px;
@@ -31,25 +34,30 @@
     #menu ul li:hover {
       background: #FFF;
     }
-    /* menu info */
-    #center {
+    /* panes */
+    .pane-container {
       width: 60%;
-      height: 400px;
-      margin: -200px auto 0 auto;
-      position: relative;
-      top: 50%;
       cursor: default;
       border-radius: 3px;
       background-color: rgba(255, 255, 255, 0.8);
     }
-    #center > div {
-      padding: 10px;
-    }
-    #center .close {
+    .pane-container .close {
       padding: 2px;
       float: right;
       font-family: sans-serif;
       cursor: pointer;
+    }
+    .pane-container > div {
+      padding: 10px;
+    }
+    #info {
+      height: 40px;
+      margin: 0 auto;
+    }
+    #center {
+      height: 400px;
+      margin: -200px auto 0 auto;
+      top: 50%;
     }
     #help-text code {
       background: #DDD;
@@ -65,6 +73,9 @@
     /* z-indices */
     .fixed {
       position: fixed;
+    }
+    .relative {
+      position: relative;
     }
     .absolute {
       position: absolute;
@@ -84,7 +95,7 @@
     #menu {
       z-index: 3;
     }
-    #center {
+    #center, #info {
       z-index: 4;
     }
   </style>
@@ -94,13 +105,14 @@
     Menu
     <ul class="hidden">
       <li data-option="help">Help</li>
+      <li data-option="area">Select Area (AOI)</li>
       <li data-option="save">Save</li>
       <li data-option="load">Load</li>
     </ul>
   </div>
-  <div id="center" class="hidden">
+  <div id="center" class="pane-container hidden relative">
     <div id="help-text" class="hidden">
-      <div class="close">x</div>
+      <div class="close" data-option="help">x</div>
       <h2>Help with point mover</h2>
         TODO
         <ol>
@@ -123,14 +135,20 @@
         </ul>
     </div>
     <div id="save" class="hidden">
-      <div class="close">x</div>
+      <div class="close" data-option="save">x</div>
       <h2>Save</h2>
 
     </div>
     <div id="load" class="hidden">
-      <div class="close">x</div>
+      <div class="close" data-option="load">x</div>
       <h2>Load</h2>
       <input id="files" type="file" name="files[]" />
+    </div>
+  </div>
+  <div id="info" class="pane-container hidden relative">
+    <div id="select-area" class="hidden">
+      <div class="close" data-option="area">x</div>
+      <a id="area-link" class="disabled" href="">Accept current area</a>
     </div>
   </div>
   <canvas id="canvas-back" class="absolute"></canvas>
