@@ -1,4 +1,4 @@
-$(document).ready(
+$(document).ready(->
   asRadian = (degree) ->
     return (degree/180) * Math.PI
 
@@ -465,5 +465,9 @@ $(document).ready(
   drawBlank({showInvestigationArea: false})
   newPoint(true)
   blinkCaretCanvas()
+  parsed = purl(window.location)
+  if not parsed.param('hide-lisence')
+    showPane.help()
 
+  return
 )
