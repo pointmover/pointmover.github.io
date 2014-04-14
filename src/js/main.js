@@ -72,13 +72,12 @@
     };
     _commonShowPaneTask = function(elementId) {
       var hidePaneFunction, _i, _len, _ref;
-      _commonHidePaneTask({
-        fadeOut: false
-      });
       _ref = _.values(hidePane);
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         hidePaneFunction = _ref[_i];
-        hidePaneFunction();
+        hidePaneFunction({
+          fadeOut: false
+        });
       }
       return $(elementId).fadeIn().parent().fadeIn();
     };
@@ -157,12 +156,31 @@
       return hideAllPanes(options);
     };
     hidePane = {
-      help: function() {},
-      area: function() {
+      help: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return _commonHidePaneTask(options);
+      },
+      area: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        _commonHidePaneTask(options);
         return $canvasCaret.show();
       },
-      save: function() {},
-      load: function() {}
+      save: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return _commonHidePaneTask(options);
+      },
+      load: function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return _commonHidePaneTask(options);
+      }
     };
     $('#menu li').click(function(evt) {
       var option;
@@ -172,7 +190,6 @@
     $('.close').click(function(evt) {
       var option;
       option = $(evt.target).data('option');
-      _commonHidePaneTask();
       return hidePane[option]();
     });
     $('#area-link').click(function(evt) {
@@ -631,8 +648,8 @@
     newPoint(true);
     blinkCaretCanvas();
     parsed = purl(window.location);
-    if (!parsed.param('hide-license')) {
-      showPane.help();
+    if (parsed.param('hide-license')) {
+      hidePane.help();
     }
   });
 

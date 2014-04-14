@@ -39,9 +39,8 @@ $(document).ready(->
       $('.pane-container > div').hide()
 
   _commonShowPaneTask = (elementId) ->
-    _commonHidePaneTask({fadeOut: false})
     for hidePaneFunction in _.values(hidePane)
-      hidePaneFunction()
+      hidePaneFunction({fadeOut: false})
     $(elementId).fadeIn().parent().fadeIn()
 
   showPane =
@@ -102,18 +101,21 @@ $(document).ready(->
     hideAllPanes(options)
 
   hidePane =
-    help: ->
-    area: ->
+    help: (options={}) ->
+      _commonHidePaneTask(options)
+    area:(options={}) ->
+      _commonHidePaneTask(options)
       $canvasCaret.show()
-    save: ->
-    load: ->
+    save:(options={}) ->
+      _commonHidePaneTask(options)
+    load:(options={}) ->
+      _commonHidePaneTask(options)
 
   $('#menu li').click (evt) ->
     option = $(evt.target).data('option')
     showPane[option]()
   $('.close').click (evt) ->
     option = $(evt.target).data('option')
-    _commonHidePaneTask()
     hidePane[option]()
 
   $('#area-link').click (evt) ->
@@ -466,8 +468,8 @@ $(document).ready(->
   newPoint(true)
   blinkCaretCanvas()
   parsed = purl(window.location)
-  if not parsed.param('hide-license')
-    showPane.help()
+  if parsed.param('hide-license')
+    hidePane.help()
 
   return
 )
