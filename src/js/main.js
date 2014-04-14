@@ -35,7 +35,7 @@
       if (len == null) {
         len = 2;
       }
-      pad = (function() {
+      pad = ((function() {
         var _i, _len, _ref, _results;
         _ref = new Array(len);
         _results = [];
@@ -44,7 +44,7 @@
           _results.push('0');
         }
         return _results;
-      })();
+      })()).join('');
       return pad.substring(0, pad.length - str.length) + str;
     };
     getMousePos = function(canvas, evt) {

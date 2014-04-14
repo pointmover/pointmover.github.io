@@ -13,7 +13,7 @@ $(document).ready(->
     drop an email to 'point dot mover at gmail dot com' and I'll do my best to respond and help."""
 
   lpad = (str, len=2) ->
-    pad = ('0' for i in new Array(len))
+    pad = ('0' for i in new Array(len)).join('')
     return pad.substring(0, pad.length - str.length) + str
 
   getMousePos = (canvas, evt) ->
