@@ -43,17 +43,29 @@
     return $menu.animate({
       opacity: 0
     });
-  }), hideAllPanes = function(fadeOut) {
-    if (fadeOut) {
-      $('.pane-container').fadeOut();
+  }), hideAllPanes = function(options) {
+    if (options.fadeOut == null) {
+      options.fadeOut = true;
+    }
+    if (options.hideContainers == null) {
+      options.hideContainers = true;
+    }
+    if (options.fadeOut) {
+      if (options.hideContainers) {
+        $('.pane-container').fadeOut();
+      }
       return $('.pane-container > div').fadeOut();
     } else {
-      $('.pane-container > div').hide();
-      return $('.pane-container').hide();
+      if (options.hideContainers) {
+        $('.pane-container').hide();
+      }
+      return $('.pane-container > div').hide();
     }
   }, _commonShowPaneTask = function(elementId) {
     var hidePaneFunction, _i, _len, _ref;
-    _commonHidePaneTask();
+    _commonHidePaneTask({
+      fadeOut: false
+    });
     _ref = _.values(hidePane);
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       hidePaneFunction = _ref[_i];
@@ -114,14 +126,24 @@
       uriContent = "data:application/octet-stream," + encodeURIComponent(data);
       d = new Date();
       filename = "Point Mover data " + (d.getFullYear()) + "-" + (d.getMonth()) + "-" + (d.getDate()) + " " + (d.getHours()) + ":" + (d.getMinutes()) + ".json";
+      $('#save').find('a').remove();
       link = $('<a>').attr('href', uriContent).attr('download', filename).html("Click to save: " + filename);
       return $('#save').append(link);
     },
     load: function() {
       return _commonShowPaneTask('#load');
     }
-  }, _commonHidePaneTask = function() {
-    return hideAllPanes(true);
+  }, _commonHidePaneTask = function(options) {
+    if (options == null) {
+      options = {};
+    }
+    if (options.hideContainers == null) {
+      options.hideContainers = true;
+    }
+    if (options.fadeOut == null) {
+      options.fadeOut = true;
+    }
+    return hideAllPanes(options);
   }, hidePane = {
     help: function() {},
     area: function() {
@@ -157,7 +179,9 @@
         window.PMState = JSON.parse(content);
         displayData();
         newPoint();
-        return hideAllPanes(true);
+        return hideAllPanes({
+          fadeOut: true
+        });
       } catch (_error) {
         e = _error;
         error('loading points from file');

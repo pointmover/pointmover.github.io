@@ -55,8 +55,8 @@
       margin: 0 auto;
     }
     #center {
-      height: 400px;
-      margin: -200px auto 0 auto;
+      min-height: 200px;
+      margin: -300px auto 0 auto;
       top: 50%;
     }
     #help-text code {
@@ -113,26 +113,47 @@
   <div id="center" class="pane-container hidden relative">
     <div id="help-text" class="hidden">
       <div class="close" data-option="help">x</div>
-      <h2>Help with point mover</h2>
-        TODO
-        <ol>
-          <li>what it aims to help with
-            <ul>
-              <li>quick start demo</li>
-            </ul>
-          </li>
-          <li>different strategies you can use</li>
-          <li>tips on how to get the most out of it</li>
-          <li>how to save and load files</li>
-        </ol>
+      <h2>Help with Point Mover</h2>
+        <h3>What is Point Mover</h3>
+        <p>
+        Point Mover allows you to map and track over time any area(s) of your
+        peripheral vision that are not functioning correctly.
+        </p>
+
+        <h3>How does Point Mover work</h3>
+        <p>
+        Cover one eye and staring with the other at the central non flashing point.
+        Press the <code>+</code> key if you can sense the flashing dot or the
+        <code>-</code> if you can not.  Then press the <code>d</code> key to display
+        the points you can and cannot see.
+        <p>
+        </p>
+        Currently this only works for mapping out a roughly small and circular area of
+        vision that is not working and requires the center of the area of investigation
+        (AOI) to be in the center of this patch of lost vision.  You can set this area
+        using the menu option.
+        </p>
+        <h3>Get the most out of Point Mover</h3>
+        <p>
+        Try to assess your vision periodically (every week, every other day, or as necessary),
+        and do so sitting in the same position of your head relative to the screen.
+        It's not an exact set up but the more precise and repeatable you can make it, the
+        more useful the results will be.
+        </p>
         <h3>Shortcuts</h3>
         <ul>
           <li><code>d</code> to display the current area of investigation and points recorded</li>
           <li><code>-</code> to mark the current point as not visible</li>
           <li><code>+</code> to mark the current point as visible</li>
-          <li><code>c</code> clear all the points you've recorded</li>
           <li><code>s</code> (display the menu to) save the points you've recorded</li>
+          <li><code>c</code> clear all the points you've recorded</li>
         </ul>
+        <h3>Further help</h3>
+        The source code is available on github at:
+        <a href="https://github.com/pointmover/pointmover.github.io">
+        https://github.com/pointmover/pointmover.github.io</a>
+        Please file any bug reports or feature requests there as a new issue.
+        Email 'point dot mover at gmail dot com' if you've got any questions you can't resolve.
     </div>
     <div id="save" class="hidden">
       <div class="close" data-option="save">x</div>

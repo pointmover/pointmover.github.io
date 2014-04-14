@@ -26,16 +26,20 @@ $(document).ready(
     $menu.find('ul').fadeIn()
   $menu.mouseleave ->
     $menu.animate({opacity: 0})
-  hideAllPanes = (fadeOut) ->
-    if fadeOut
-      $('.pane-container').fadeOut()
+  hideAllPanes = (options) ->
+    options.fadeOut ?= true
+    options.hideContainers ?= true
+    if options.fadeOut
+      if options.hideContainers
+        $('.pane-container').fadeOut()
       $('.pane-container > div').fadeOut()
     else
+      if options.hideContainers
+        $('.pane-container').hide()
       $('.pane-container > div').hide()
-      $('.pane-container').hide()
 
   _commonShowPaneTask = (elementId) ->
-    _commonHidePaneTask()
+    _commonHidePaneTask({fadeOut: false})
     for hidePaneFunction in _.values(hidePane)
       hidePaneFunction()
     $(elementId).fadeIn().parent().fadeIn()
@@ -86,13 +90,16 @@ $(document).ready(
       uriContent = "data:application/octet-stream," + encodeURIComponent(data);
       d = new Date()
       filename = "Point Mover data #{d.getFullYear()}-#{d.getMonth()}-#{d.getDate()} #{d.getHours()}:#{d.getMinutes()}.json"
+      $('#save').find('a').remove()
       link = $('<a>').attr('href', uriContent).attr('download', filename).html("Click to save: #{filename}")
       $('#save').append(link)
     load: ->
       _commonShowPaneTask('#load')
 
-  _commonHidePaneTask = ->
-    hideAllPanes(true)
+  _commonHidePaneTask = (options={}) ->
+    options.hideContainers ?= true
+    options.fadeOut ?= true
+    hideAllPanes(options)
 
   hidePane =
     help: ->
@@ -126,7 +133,7 @@ $(document).ready(
         window.PMState = JSON.parse(content)
         displayData()
         newPoint()
-        hideAllPanes(true)
+        hideAllPanes({fadeOut: true})
       catch e
         error('loading points from file')
         throw e
