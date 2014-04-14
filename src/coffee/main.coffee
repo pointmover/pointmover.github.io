@@ -145,8 +145,6 @@ $(document).ready(->
   cursorBlink =
     on: 500
     off: 400
-  increment = 3
-  pointSize = 2
   blinkerTimeout = undefined
   caretCanvasTimeout = undefined
 
@@ -193,6 +191,8 @@ $(document).ready(->
     parsed = purl(window.location)
 
     window.PMState =
+      increment: asInt(parsed.param('increment') or '3')
+      pointSize: asInt(parsed.param('pointSize') or '2')
       point:
         x: 0
         y: 0
@@ -211,8 +211,7 @@ $(document).ready(->
         #   minX: 100000
         #   maxY: 0
         #   minY: 100000
-        edgeFinder:
-          distanceStep: 6
+        edgeFinder: true
 
   dumpData = ->
     console.clear()
@@ -223,7 +222,13 @@ $(document).ready(->
   _drawPoint = (point, colour, context) ->
     context.strokeStyle = colour
     center = getCenter()
-    context.strokeRect(center.x + point.x-0.5, center.y + point.y-0.5, pointSize, pointSize)
+    context.strokeRect(
+      center.x + point.x-0.5,
+      center.y + point.y-0.5,
+      window.PMState.pointSize,
+      window.PMState.pointSize,
+    )
+    return
 
   window.showPoint = (point, options={}) ->
     options.colour ?= black
@@ -238,7 +243,9 @@ $(document).ready(->
       clearTimeout(blinkerTimeout)
       func = ->
         hidePoint(point, {blink: true})
+        return
       blinkerTimeout = setTimeout(func, cursorBlink.on)
+    return
 
   window.hidePoint = (point, options={}) ->
     options.colour ?= backgroundColour
@@ -249,7 +256,9 @@ $(document).ready(->
       clearTimeout(blinkerTimeout)
       func = ->
         showPoint(point, {blink: true})
+        return
       blinkerTimeout = setTimeout(func, cursorBlink.off)
+    return
 
   window.showInvestigationArea = ->
     center = getCenter()
@@ -257,10 +266,13 @@ $(document).ready(->
       center.x + window.PMState.areaOfInvestigation.x-0.5,
       center.y + window.PMState.areaOfInvestigation.y-0.5,
       window.PMState.areaOfInvestigation.width,
-      window.PMState.areaOfInvestigation.height,)
+      window.PMState.areaOfInvestigation.height,
+    )
+    return
 
   clearCanvas = (ctx) ->
     ctx.clearRect(0, 0, width, height)
+    return
 
   drawBlank = (options={}) ->
     options.showInvestigationArea ?= true
@@ -276,6 +288,7 @@ $(document).ready(->
     showPoint({x: 0, y: 0})
     if options.showInvestigationArea
       showInvestigationArea()
+    return
 
   getAOICenter = ->
     aoi = window.PMState.areaOfInvestigation
@@ -287,7 +300,7 @@ $(document).ready(->
   randomisePoint = ->
     x = window.PMState.areaOfInvestigation.x + asInt(Math.random() * window.PMState.areaOfInvestigation.width)
     y = window.PMState.areaOfInvestigation.y + asInt(Math.random() * window.PMState.areaOfInvestigation.height)
-    point = {x, y}
+    return {x, y}
 
   lastPoint = (goBack=1) ->
     return window.PMState.all[window.PMState.all.length-goBack]
@@ -303,8 +316,8 @@ $(document).ready(->
       last.directionX = directionX
       last.directionY = directionY
       if not last.seen
-        point.x += directionX * increment
-        point.y += directionY * increment
+        point.x += directionX * window.PMState.increment
+        point.y += directionY * window.PMState.increment
       else
         lastBy1 = lastPoint(2)
         lastBy2 = lastPoint(3)
@@ -332,8 +345,8 @@ $(document).ready(->
             console.log 'erm'
 
         else
-          point.x -= directionX * increment
-          point.y -= directionY * increment
+          point.x -= directionX * window.PMState.increment
+          point.y -= directionY * window.PMState.increment
           last.stepBack = true
     showPoint(point, {context: contextCaret})
 
@@ -370,8 +383,8 @@ $(document).ready(->
       # add on the necessary change in direction
       angle += Math.PI * direction
 
-      point.x -= Math.sin(angle) * window.PMState.strategy.edgeFinder.distanceStep
-      point.y -= Math.cos(angle) * window.PMState.strategy.edgeFinder.distanceStep
+      point.x -= Math.sin(angle) * window.PMState.increment
+      point.y -= Math.cos(angle) * window.PMState.increment
     else
       point = getAOICenter()
     window.PMState.point = point
@@ -385,7 +398,7 @@ $(document).ready(->
     else if window.PMState.strategy.edgeFinder
       newEdgeFinderPoint()
     else if window.PMState.strategy.showingRandomPoints or force
-      randomisePoint()
+      point = randomisePoint()
       showPoint(point, {blink: true})
 
   unseen = ->
@@ -418,22 +431,22 @@ $(document).ready(->
       console.log 'left'
       evt.preventDefault()
       hidePoint(point)
-      point.x -= increment
+      point.x -= window.PMState.increment
     else if evt.keyCode == 39
       console.log 'right'
       evt.preventDefault()
       hidePoint(point)
-      point.x += increment
+      point.x += window.PMState.increment
     else if evt.keyCode == 38
       console.log 'up'
       evt.preventDefault()
       hidePoint(point)
-      point.y -= increment
+      point.y -= window.PMState.increment
     else if evt.keyCode == 40
       console.log 'down'
       evt.preventDefault()
       hidePoint(point)
-      point.y += increment
+      point.y += window.PMState.increment
     else if evt.keyCode == 67
       console.log 'c'
       confirmed = confirm('Are you sure you want to clear the data?')
