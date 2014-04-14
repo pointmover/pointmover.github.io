@@ -12,6 +12,10 @@ $(document).ready(->
     alert """Sorry there was an error #{msg}, please refresh and try again.  If it persists,
     drop an email to 'point dot mover at gmail dot com' and I'll do my best to respond and help."""
 
+  lpad = (str) ->
+    pad = '00000'
+    return pad.substring(0, pad.length - str.length) + str
+
   getMousePos = (canvas, evt) ->
     rect = canvas.getBoundingClientRect()
     position =
@@ -88,7 +92,9 @@ $(document).ready(->
       data = dumpData()
       uriContent = "data:application/octet-stream," + encodeURIComponent(data);
       d = new Date()
-      filename = "Point Mover data #{d.getFullYear()}-#{d.getMonth()}-#{d.getDate()} #{d.getHours()}:#{d.getMinutes()}.json"
+      hours = lpad(d.getHours().toString())
+      minutes = lpad(d.getMinutes().toString())
+      filename = "Point Mover data #{d.getFullYear()}-#{d.getMonth()}-#{d.getDate()} #{hours}_#{minutes}.json"
       $('#save').find('a').remove()
       link = $('<a>').attr('href', uriContent).attr('download', filename).html("Click to save: #{filename}")
       $('#save').append(link)
