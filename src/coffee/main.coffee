@@ -202,7 +202,7 @@ $(document).ready(->
 
     window.PMState =
       increment: asInt(parsed.param('increment') or '3')
-      pointSize: asInt(parsed.param('pointSize') or '2')
+      pointSize: asInt(parsed.param('point-size') or '2')
       point:
         x: 0
         y: 0

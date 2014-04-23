@@ -300,7 +300,7 @@
       parsed = purl(window.location);
       return window.PMState = {
         increment: asInt(parsed.param('increment') || '3'),
-        pointSize: asInt(parsed.param('pointSize') || '2'),
+        pointSize: asInt(parsed.param('point-size') || '2'),
         point: {
           x: 0,
           y: 0
