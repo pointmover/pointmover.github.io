@@ -326,6 +326,7 @@ $(document).ready(->
       last.directionX = directionX
       last.directionY = directionY
       if not last.seen
+        point = _.clone(window.PMState.point)
         point.x += directionX * window.PMState.increment
         point.y += directionY * window.PMState.increment
       else
@@ -355,9 +356,11 @@ $(document).ready(->
             console.log 'erm'
 
         else
+          point = _.clone(window.PMState.point)
           point.x -= directionX * window.PMState.increment
           point.y -= directionY * window.PMState.increment
           last.stepBack = true
+    window.PMState.point = point
     showPoint(point, {context: contextCaret})
 
   DIRECTION_OUT = 0
@@ -459,11 +462,14 @@ $(document).ready(->
       point.y += window.PMState.increment
     else if evt.keyCode == 67
       console.log 'c'
-      confirmed = confirm('Are you sure you want to clear the data?')
-      if confirmed
-        clearData()
-        drawBlank({showInvestigationArea: false})
-        newPoint()
+      if evt.metaKey or evt.ctrlKey
+        console.log 'user probably trying to copy and paste'
+      else
+        confirmed = confirm('Are you sure you want to clear the data?')
+        if confirmed
+          clearData()
+          drawBlank({showInvestigationArea: false})
+          newPoint()
     else if evt.keyCode == 68
       console.log 'd'
       displayData()

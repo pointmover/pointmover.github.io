@@ -456,6 +456,7 @@
         last.directionX = directionX;
         last.directionY = directionY;
         if (!last.seen) {
+          point = _.clone(window.PMState.point);
           point.x += directionX * window.PMState.increment;
           point.y += directionY * window.PMState.increment;
         } else {
@@ -486,12 +487,14 @@
               console.log('erm');
             }
           } else {
+            point = _.clone(window.PMState.point);
             point.x -= directionX * window.PMState.increment;
             point.y -= directionY * window.PMState.increment;
             last.stepBack = true;
           }
         }
       }
+      window.PMState.point = point;
       return showPoint(point, {
         context: contextCaret
       });
@@ -625,13 +628,17 @@
         return point.y += window.PMState.increment;
       } else if (evt.keyCode === 67) {
         console.log('c');
-        confirmed = confirm('Are you sure you want to clear the data?');
-        if (confirmed) {
-          clearData();
-          drawBlank({
-            showInvestigationArea: false
-          });
-          return newPoint();
+        if (evt.metaKey || evt.ctrlKey) {
+          return console.log('user probably trying to copy and paste');
+        } else {
+          confirmed = confirm('Are you sure you want to clear the data?');
+          if (confirmed) {
+            clearData();
+            drawBlank({
+              showInvestigationArea: false
+            });
+            return newPoint();
+          }
         }
       } else if (evt.keyCode === 68) {
         console.log('d');
