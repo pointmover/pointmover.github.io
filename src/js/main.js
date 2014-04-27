@@ -149,7 +149,7 @@
         d = new Date();
         hours = lpad(d.getHours().toString());
         minutes = lpad(d.getMinutes().toString());
-        filename = "Point Mover data " + (d.getFullYear()) + "-" + (d.getMonth()) + "-" + (d.getDate()) + " " + hours + "_" + minutes + ".json";
+        filename = "Point Mover data " + (d.getFullYear()) + "-" + (d.getMonth() + 1) + "-" + (d.getDate()) + " " + hours + "_" + minutes + ".json";
         $('#save').find('a').remove();
         link = $('<a>').attr('href', uriContent).attr('download', filename).html("Click to save: " + filename);
         return $('#save').append(link);
